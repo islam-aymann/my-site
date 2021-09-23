@@ -3,6 +3,7 @@ Django==3.2
 djangorestframework==3.12.4
 django-ckeditor==6.1.0
 django-solo==1.1.5
+django-cors-headers==3.7.0
 
 # Files
 whitenoise==5.3.0
