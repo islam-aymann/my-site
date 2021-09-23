@@ -1,6 +1,6 @@
 DJANGO_SETTINGS_MODULE="config.settings.development"
 SECRET_KEY="SECRET_KEY"
-DATABASE="islam"
+DATABASE="postgres"
 DEBUG=1
 DEBUG_TOOLBAR=1
 

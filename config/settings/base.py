@@ -70,20 +70,9 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASE = os.getenv("DATABASE", "sqlite")
+DATABASE = os.getenv("DATABASE", "postgres")
 
-if DATABASE == "RDS":
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": os.getenv("RDS_DB_NAME"),
-            "USER": os.getenv("RDS_USERNAME"),
-            "PASSWORD": os.getenv("RDS_PASSWORD"),
-            "HOST": os.getenv("RDS_HOSTNAME"),
-            "PORT": os.getenv("RDS_PORT"),
-        }
-    }
-elif DATABASE == "postgres":
+if DATABASE == "postgres":
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql_psycopg2",
@@ -198,6 +187,12 @@ REST_FRAMEWORK = {
 # Radically simplified static file serving for Python web apps.
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+# django-solo:
+# Helps working with singletons - things like global settings that you want to edit
+# from the admin site.
+INSTALLED_APPS += [
+    "solo",
+]
 # endregion
 
 # region Internal app settings
