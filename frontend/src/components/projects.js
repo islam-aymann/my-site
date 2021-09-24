@@ -1,4 +1,6 @@
-const callouts = [
+import {useEffect, useState} from "react";
+
+const data = [
   {
     name: 'Desk and Office',
     description: 'Work from home accessories',
@@ -23,6 +25,43 @@ const callouts = [
 ]
 
 export default function Projects() {
+const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+
+    fetch("http://127.0.0.1:8000/api/v1/projects/")
+      .then((response) => {
+        setHasError(!response.ok);
+        return response.json();
+
+      })
+      .then((json_response) => {
+        if (!(200 <= json_response.status && json_response.status <= 300)) {
+          setError(json_response);
+        }
+
+        setData(json_response)
+        setLoading(false);
+
+      })
+      .catch((error) => {
+        // setError(JSON.stringify(error));
+        setLoading(false);
+      });
+
+
+  }, []);
+
+  if (loading) return <h1>Loading...</h1>
+
+  if (hasError) return <pre>Error: {JSON.stringify(error, null, 2)}</pre>;
+
+  if (!data) return <h1>No data</h1>;
+
   return (
     <div className="bg-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -31,24 +70,24 @@ export default function Projects() {
 
           <div
             className="mt-6 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-x-6">
-            {callouts.map((callout) => (
-              <div key={callout.name} className="group relative">
+            {data.map((project) => (
+              <div key={project.id} className="group relative">
                 <div
                   className="relative w-full h-80 bg-white rounded-lg overflow-hidden group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1">
                   <img
-                    src={callout.imageSrc}
-                    alt={callout.imageAlt}
+                    src={project.image}
+                    alt={project.imageAlt}
                     className="w-full h-full object-center object-cover"
                   />
                 </div>
                 <h3 className="mt-6 text-sm text-gray-500">
-                  <a href={callout.href}>
+                  <a href={project.href}>
                     <span className="absolute inset-0"/>
-                    {callout.name}
+                    {project.title}
                   </a>
                 </h3>
                 <p
-                  className="text-base font-semibold text-gray-900">{callout.description}</p>
+                  className="text-base font-semibold text-gray-900">{project.summary}</p>
               </div>
             ))}
           </div>
